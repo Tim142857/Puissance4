@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="">
+
+    <title>Puissance 4</title>
+
+    {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"></script>#}
+
+    {#<script src="{{ asset('bundles/game/js/jquery-1.11.3.js') }}"></script>#}
+    {#<link rel="stylesheet" href="{{ asset('bundles/game/css/style.css') }}">#}
+    {#<link rel="stylesheet" href="{{ asset('bundles/game/css/bootstrap.min.css') }}">#}
+
+    {% block stylesheets %}
+        {% stylesheets 'bundles/game/css/*' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% javascripts 'bundles/game/js/*' %}
+        <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock %}
+
+    {% block head %}
+    {% endblock %}
+
+</head>
+<body>
+
+{% block body %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+</body>
+</html>
+

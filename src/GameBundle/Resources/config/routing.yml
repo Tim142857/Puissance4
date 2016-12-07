@@ -1,0 +1,9 @@
+game_homepage:
+    path:     /
+    defaults: { _controller: GameBundle:Default:index }
+game_game:
+    path:     /game/{id}
+    defaults: { _controller: GameBundle:Default:game, id:null}
+game_coup:
+    path:     /coup
+    defaults: { _controller: GameBundle:Default:coup }

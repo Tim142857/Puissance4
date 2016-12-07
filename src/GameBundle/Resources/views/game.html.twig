@@ -1,0 +1,82 @@
+{% extends 'GameBundle::layout.html.twig' %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6">
+                <table class="table">
+                    {% for colonne in grid.getColonnes() %}
+                        <th data-idcolonne="{{ colonne.getId() }}">{{ loop.index }}</th>
+                    {% endfor %}
+                    {% for ligne in grid.getLignes() %}
+                        <tr>
+                            {% for slot in ligne.getSlots() %}
+                                <td data-idslot="{{ slot.getId() }}" {% if slot.getPlayer()!=null %}
+                                style="background-color: {{ slot.getPlayer().getColor() }}"{% endif %}>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-xs-6">
+                <div id="tour">
+                    <p data-idplayer="{{ grid.getNextPlayer().getId() }}">Tour du joueur
+                        <span>{{ grid.getNextPlayer().getName() }}</span></p>
+                </div>
+                <form id="form" class="hidden">
+                    <div class="form-group">
+                        <label for="col">Colonne:</label>
+                        <select class="form-control" id="col">
+                            {% for ligne in grid.getColonnes() %}
+                                <option>{{ loop.index }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-default" id="btn-valider">Valider</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('th').on('click', function () {
+                //Récupération de l'id de la colonne choisie
+                var count = $('#col').val();
+                var idColonne = $(this).data('idcolonne');
+
+                //Récupération du joueur actuel
+                var idplayer = $('#tour>p').data('idplayer');
+                jouerCoup(idColonne, idplayer);
+
+            });
+
+            function jouerCoup(idColonne, idplayer) {
+                //Ajax, exécution du coup
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('game_coup') }}',
+                    dataType: 'json',
+                    data: 'colonne=' + idColonne + '&player=' + idplayer,
+                    success: function (data) {
+                        $('*[data-idslot="' + data.idslot + '"]').css('background-color', data.color);
+                        if (data.finJeu) {
+                            $('#tour>p').text(data.nomGagnant + ' a gagné !!!!');
+                        } else if (data.nextPlayerId == 1) {
+                            jouerCoup(null, 1);
+                        } else {
+                            $('#tour>p').data('idplayer', data.nextPlayerId);
+                            $('#tour>p>span').text(data.nextPlayerName);
+                        }
+
+                    }
+                });
+            }
+        });
+    </script>
+
+{% endblock %}
+

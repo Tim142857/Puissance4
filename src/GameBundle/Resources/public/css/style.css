@@ -1,0 +1,24 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+table {
+    text-align: center;
+    border: 2px solid blue;
+    background-color: white;
+    color: black;;
+}
+
+th {
+    text-align: center;
+}
+
+td {
+    width: 60px;
+    height: 60px;
+    border: 1px solid black;
+}
+
+#form {
+}
