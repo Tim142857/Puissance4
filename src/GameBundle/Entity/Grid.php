@@ -37,7 +37,12 @@ class Grid
     private $players;
 
     /**
-     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Player", cascade={"persist"})
+     * @var \Player
+     *
+     * @ORM\ManyToOne(targetEntity="Player")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Player", referencedColumnName="id")
+     * })
      */
     private $nextPlayer;
 
@@ -161,6 +166,7 @@ class Grid
     {
         return $this->players;
     }
+
 
     /**
      * Set nextPlayer

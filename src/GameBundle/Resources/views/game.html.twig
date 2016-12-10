@@ -3,9 +3,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-6">
-                <table class="table">
+                <table class="table" data-idgrid="{{ grid.getId() }}">
                     {% for colonne in grid.getColonnes() %}
-                        <th data-idcolonne="{{ colonne.getId() }}">{{ loop.index }}</th>
+                        <th data-idcolonne="{{ colonne.getId() }}">{{ loop.index }}/{{ colonne.getId() }}</th>
                     {% endfor %}
                     {% for ligne in grid.getLignes() %}
                         <tr>
@@ -22,6 +22,9 @@
                 <div id="tour">
                     <p data-idplayer="{{ grid.getNextPlayer().getId() }}">Tour du joueur
                         <span>{{ grid.getNextPlayer().getName() }}</span></p>
+                </div>
+                <div id="error" style="color:red; font-weight: bolder;">
+                    <p></p>
                 </div>
                 <form id="form" class="hidden">
                     <div class="form-group">
@@ -54,26 +57,36 @@
 
             });
 
-            function jouerCoup(idColonne, idplayer) {
+            function jouerCoup(idColonne, idplayer, idGrid=null) {
+                $('#error>p').text('');
                 //Ajax, exécution du coup
+                var data = 'colonne=' + idColonne + '&player=' + idplayer;
+                if (idGrid != null) {
+                    data += '&idgrid=' + idGrid;
+                }
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('game_coup') }}',
                     dataType: 'json',
-                    data: 'colonne=' + idColonne + '&player=' + idplayer,
+                    data: data,
                     success: function (data) {
-                        $('*[data-idslot="' + data.idslot + '"]').css('background-color', data.color);
-                        if (data.finJeu) {
-                            $('#tour>p').text(data.nomGagnant + ' a gagné !!!!');
-                        } else if (data.nextPlayerId == 1) {
-                            jouerCoup(null, 1);
+                        if (typeof data.error !== 'undefined') {
+                            $('#error>p').text(data.error);
                         } else {
-                            $('#tour>p').data('idplayer', data.nextPlayerId);
-                            $('#tour>p>span').text(data.nextPlayerName);
+                            $('*[data-idslot="' + data.idslot + '"]').css('background-color', data.color);
+                            if (data.finJeu) {
+                                $('#tour>p').text(data.nomGagnant + ' a gagné !!!!');
+                            } else if (data.nextPlayerId == 1) {
+                                var numGrid = $('table').data('idgrid');
+                                jouerCoup('null', 1, numGrid);
+                            } else {
+                                $('#tour>p').data('idplayer', data.nextPlayerId);
+                                $('#tour>p>span').text(data.nextPlayerName);
+                            }
                         }
-
                     }
-                });
+                })
+                ;
             }
         });
     </script>

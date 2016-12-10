@@ -34,7 +34,7 @@ class Slot
     /**
      * @var \Colonne
      *
-     * @ORM\ManyToOne(targetEntity="Colonne", inversedBy="Slots")
+     * @ORM\ManyToOne(targetEntity="Colonne", inversedBy="slots")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="colonne", referencedColumnName="id")
      * })
@@ -44,7 +44,7 @@ class Slot
     /**
      * @var \Colonne
      *
-     * @ORM\ManyToOne(targetEntity="Ligne", inversedBy="Slots")
+     * @ORM\ManyToOne(targetEntity="Ligne", inversedBy="slots")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ligne", referencedColumnName="id")
      * })
